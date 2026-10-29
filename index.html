@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Switch Notifications</title>
+</head>
+<body>
+  <h1>IoT Smart Switch</h1>
+  <p id="status">Notification test page</p>
+  <button id="enable">Enable notifications</button>
+
+  <script>
+    document.getElementById("enable").onclick = async () => {
+      if (!("Notification" in window)) {
+        alert("This browser does not support notifications.");
+        return;
+      }
+
+      const permission = await Notification.requestPermission();
+
+      if (permission === "granted") {
+        new Notification("Smart Switch", {
+          body: "Notifications are enabled!"
+        });
+        document.getElementById("status").textContent =
+          "Notifications enabled successfully.";
+      } else {
+        document.getElementById("status").textContent =
+          "Notification permission was not granted.";
+      }
+    };
+  </script>
+</body>
+</html>
