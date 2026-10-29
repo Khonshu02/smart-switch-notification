@@ -8,29 +8,39 @@
 </head>
 <body>
   <h1>IoT Smart Switch</h1>
-  <p id="status">Notification test page</p>
-  <button id="enable">Enable notifications</button>
+  <p>Notification permission: <span id="permission">Checking...</span></p>
+
+  <button onclick="notifySwitch('ON')">Test ON notification</button>
+  <button onclick="notifySwitch('OFF')">Test OFF notification</button>
 
   <script>
-    document.getElementById("enable").onclick = async () => {
+    async function enableNotifications() {
       if (!("Notification" in window)) {
-        alert("This browser does not support notifications.");
+        document.getElementById("permission").textContent =
+          "Not supported";
         return;
       }
 
-      const permission = await Notification.requestPermission();
-
-      if (permission === "granted") {
-        new Notification("Smart Switch", {
-          body: "Notifications are enabled!"
-        });
-        document.getElementById("status").textContent =
-          "Notifications enabled successfully.";
-      } else {
-        document.getElementById("status").textContent =
-          "Notification permission was not granted.";
+      if (Notification.permission === "default") {
+        await Notification.requestPermission();
       }
-    };
+
+      document.getElementById("permission").textContent =
+        Notification.permission;
+    }
+
+    function notifySwitch(state) {
+      if (Notification.permission !== "granted") {
+        alert("Please enable notifications first.");
+        return;
+      }
+
+      new Notification("IoT Smart Switch", {
+        body: "LED turned " + state + " (test notification)"
+      });
+    }
+
+    enableNotifications();
   </script>
 </body>
 </html>
